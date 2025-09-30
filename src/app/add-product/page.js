@@ -76,7 +76,12 @@ export default function AddProductPage() {
   };
 
   return (
+    <div>
+      <button className="text-white/90 hover:text-white/70 mb-8 py-2 px-6 rounded-md bg-black" onClick={() => window.history.back()}>
+        ← Go to Back
+      </button>
     <div className="p-6 max-w-lg mx-auto bg-white shadow-lg rounded-2xl text-gray-700">
+      
       <h1 className="text-3xl font-bold mb-6 text-center text-green-700">
         ➕ Add New Product
       </h1>
@@ -183,6 +188,7 @@ export default function AddProductPage() {
           )}
         </button>
       </form>
+    </div>
     </div>
   );
 }
