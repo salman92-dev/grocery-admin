@@ -10,13 +10,23 @@ export default function EditProductModal({ product, isOpen, onClose, onSave }) {
 
   // ✅ Sync form when modal opens
   useEffect(() => {
-    if (product) setForm(product);
+    if (product) {
+      setForm({
+        ...product,
+        price: Number(product.price) || 0, // ensure price is number
+      });
+    }
   }, [product]);
 
   if (!isOpen) return null;
 
+  // ✅ Fix: convert price to number
   const handleChange = (e) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: name === "price" ? parseFloat(value) || 0 : value,
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -26,15 +36,18 @@ export default function EditProductModal({ product, isOpen, onClose, onSave }) {
       const res = await fetch(`/api/update-product/${form.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          ...form,
+          price: Number(form.price), // ✅ force numeric before saving
+        }),
       });
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to update product");
 
       toast.success("Product updated successfully!");
-      onSave();   // refresh product list
-      onClose();  // close modal
+      onSave(); // refresh product list
+      onClose(); // close modal
     } catch (err) {
       toast.error(err.message);
     } finally {
@@ -81,11 +94,13 @@ export default function EditProductModal({ product, isOpen, onClose, onSave }) {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Price (PKR)</label>
+                <label className="block text-sm font-medium mb-1">
+                  Price (PKR)
+                </label>
                 <input
                   type="number"
                   name="price"
-                  value={form.price || ""}
+                  value={form.price ?? ""}
                   onChange={handleChange}
                   className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
                   required

@@ -6,7 +6,7 @@ import Image from "next/image";
 export default function AddProductPage() {
   const [form, setForm] = useState({
     name: "",
-    price: "",
+    price: 0, // 👈 keep as number from start
     category: "",
     image: "",
   });
@@ -14,7 +14,12 @@ export default function AddProductPage() {
   const [uploading, setUploading] = useState(false);
 
   const handleChange = (e) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+
+    setForm((prev) => ({
+      ...prev,
+      [name]: name === "price" ? Number(value) : value, // 👈 convert price to number
+    }));
   };
 
   const handleFileUpload = async (e) => {
@@ -45,7 +50,6 @@ export default function AddProductPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // ✅ Validation: require either upload OR url
     if (!form.image) {
       alert("Please provide an image (upload or URL).");
       return;
@@ -56,14 +60,14 @@ export default function AddProductPage() {
       const res = await fetch("/api/add-product", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify(form), // 👈 price is already number
       });
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to add product");
 
       alert("✅ Product added successfully!");
-      setForm({ name: "", price: "", category: "", image: "" });
+      setForm({ name: "", price: 0, category: "", image: "" });
     } catch (err) {
       alert(err.message);
     } finally {
