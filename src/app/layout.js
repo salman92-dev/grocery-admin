@@ -12,6 +12,13 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const Logout = () => {
+  if (typeof window !== "undefined") {
+    localStorage.removeItem("user");
+    window.location.href = "/login"; // Redirect to login page
+  }
+}
+
 export const metadata = {
 title: 'Admin Panel – GitHub JSON CRUD',
 description: 'Simple admin panel using GitHub as a JSON database',
