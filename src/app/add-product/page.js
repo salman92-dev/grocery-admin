@@ -1,9 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+
 
 export default function AddProductPage() {
+  const [userLoading, setUserLoading] = useState(true);
   const [form, setForm] = useState({
     name: "",
     price: 0, // 👈 keep as number from start
@@ -12,7 +15,18 @@ export default function AddProductPage() {
   });
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const router = useRouter();
 
+  // ✅ Auth check
+  useEffect(() => {
+    const localuser = localStorage.getItem("user");
+    if (!localuser) {
+      router.push("/login");
+    }
+    else{
+      setUserLoading(false);
+    }
+  }, [router]);
   const handleChange = (e) => {
     const { name, value } = e.target;
 

@@ -4,14 +4,31 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import EditProductModal from "./components/update-product";
 import toast, { Toaster } from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import { FaEdit, FaTrash } from "react-icons/fa";
+
 
 export default function Home() {
   const [products, setProducts] = useState([]);
   const [editingProduct, setEditingProduct] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [deletingId, setDeletingId] = useState(null); // ✅ track delete in progress
+  const [deletingId, setDeletingId] = useState(null);
+  const [userLoading, setUserLoading] = useState(true);
 
-  // fetch products
+  const router = useRouter();
+
+  // ✅ Auth check
+  useEffect(() => {
+    const localuser = localStorage.getItem("user");
+    if (!localuser) {
+      router.push("/login");
+    }
+    else{
+      setUserLoading(false);
+    }
+  }, [router]);
+
+  // ✅ Fetch products
   const loadProducts = async () => {
     setLoading(true);
     try {
@@ -20,6 +37,7 @@ export default function Home() {
       setProducts(data);
     } catch (error) {
       console.error("Failed to fetch products:", error);
+      toast.error("Failed to load products");
     }
     setLoading(false);
   };
@@ -28,7 +46,7 @@ export default function Home() {
     loadProducts();
   }, []);
 
-  // delete product with toast confirm + loader
+  // ✅ Delete product
   const handleDelete = (id) => {
     toast(
       (t) => (
@@ -41,7 +59,7 @@ export default function Home() {
               disabled={deletingId === id}
               className="px-3 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600 disabled:opacity-50"
               onClick={async () => {
-                setDeletingId(id); // ✅ start loader
+                setDeletingId(id);
                 toast.dismiss(t.id);
 
                 try {
@@ -57,7 +75,7 @@ export default function Home() {
                 } catch (err) {
                   toast.error("Error deleting product.");
                 } finally {
-                  setDeletingId(null); // ✅ stop loader
+                  setDeletingId(null);
                 }
               }}
             >
@@ -76,15 +94,28 @@ export default function Home() {
     );
   };
 
+  // ✅ Prevent flicker on auth check
+  if (userLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+        <p className="mt-4 text-gray-600 font-medium">Checking authentication...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full">
-      <div className="flex flex-col md:flex-row gap-12 items-center justify-between mb-4 bg-gray-800 p-4 rounded">
+      {/* Toaster */}
+      <Toaster position="top-right" />
+
+      <div className="flex flex-col md:flex-row gap-12 items-center justify-between mb-4 bg-gray-800 p-4 rounded-xl">
         <h1 className="text-2xl md:text-3xl font-bold text-white">
           📦 Product Management
         </h1>
         <a
           href="/add-product"
-          className="inline-block px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
+          className="inline-block px-4 py-2 bg-green-400 text-white rounded hover:bg-green-300 transition"
         >
           + Add Product
         </a>
@@ -93,9 +124,9 @@ export default function Home() {
       {/* Loader / Skeleton */}
       {loading ? (
         <div className="overflow-x-auto rounded-lg shadow-md">
-          <table className="w-full border-collapse bg-white">
+          <table className="w-[180vw] md:w-full border-collapse bg-white">
             <thead className="bg-gray-800">
-              <tr className="bg-gray-800 text-left text-sm font-semibold text-white-700">
+              <tr className="bg-gray-800 text-left text-sm font-semibold text-white">
                 <th className="px-6 py-3">Image</th>
                 <th className="px-6 py-3">Name</th>
                 <th className="px-6 py-3">Category</th>
@@ -131,14 +162,14 @@ export default function Home() {
         <p className="mt-2 text-red-500">No products found.</p>
       ) : (
         <div className="overflow-x-auto rounded-lg shadow-md">
-          <table className="w-full border-collapse bg-white">
+          <table className="w-[160vw] md:w-full border-collapse bg-white">
             <thead>
-              <tr className="bg-gray-800 text-left text-sm font-semibold text-white-100">
-                <th className="px-6 py-3">Image</th>
-                <th className="px-6 py-3">Name</th>
-                <th className="px-6 py-3">Category</th>
-                <th className="px-6 py-3">Price (Rs)</th>
-                <th className="px-6 py-3">Actions</th>
+              <tr className="bg-gray-800 text-left text-sm font-semibold text-white">
+                <th className="px-3 md:px-6 py-3">Image</th>
+                <th className="px-3 md:px-6 py-3">Name</th>
+                <th className="px-3 md:px-6 py-3">Category</th>
+                <th className="px-3 md:px-6 py-3">Price (Rs)</th>
+                <th className="px-3 md:px-6 py-3">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -147,7 +178,7 @@ export default function Home() {
                   key={p.id}
                   className="border-t hover:bg-gray-50 transition"
                 >
-                  <td className="px-6 py-4">
+                  <td className="px-3 md:px-6 py-4">
                     <div className="relative w-16 h-16 rounded-md overflow-hidden border">
                       <Image
                         src={p.image}
@@ -157,56 +188,55 @@ export default function Home() {
                       />
                     </div>
                   </td>
-                  <td className="px-6 py-4 font-medium text-black/70">
+                  <td className="px-3 md:px-6 py-4 font-medium text-black/70">
                     {p.name}
                   </td>
-                  <td className="px-6 py-4 capitalize text-gray-600">
+                  <td className="px-3 md:px-6 py-4 capitalize text-gray-600">
                     {p.category}
                   </td>
-                  <td className="px-6 py-4 font-semibold text-green-600">
+                  <td className="px-3 px-6 py-4 font-semibold text-green-600">
                     {p.price} PKR
                   </td>
-                  <td className="px-6 py-4 space-x-4 space-y-2">
+                  <td className="px-3 md:px-6 py-9 flex items-center gap-6">
                     <button
-                      className="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600"
+                      className="text-sm text-black/70 m-0 rounded hover:text-black/90"
                       onClick={() => setEditingProduct(p)}
                     >
-                      Edit
+                      <FaEdit size={18} />
                     </button>
-                   <button
-                        disabled={deletingId === p.id}
-                        onClick={() => handleDelete(p.id)}
-                        className="px-3 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600 disabled:opacity-50 flex items-center justify-center gap-2"
-                      >
-                        {deletingId === p.id ? (
-                          <>
-                            <svg
-                              className="animate-spin h-4 w-4 text-white"
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                            >
-                              <circle
-                                className="opacity-25"
-                                cx="12"
-                                cy="12"
-                                r="10"
-                                stroke="currentColor"
-                                strokeWidth="4"
-                              ></circle>
-                              <path
-                                className="opacity-75"
-                                fill="currentColor"
-                                d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-                              ></path>
-                            </svg>
-                            Deleting...
-                          </>
-                        ) : (
-                          "Delete"
-                        )}
-                      </button>
-
+                    <button
+                      disabled={deletingId === p.id}
+                      onClick={() => handleDelete(p.id)}
+                      className="text-sm text-red-600 rounded disabled:opacity-50 flex items-center justify-center gap-2"
+                    >
+                      {deletingId === p.id ? (
+                        <>
+                          <svg
+                            className="animate-spin h-4 w-4 text-red-600"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                          >
+                            <circle
+                              className="opacity-100"
+                              cx="12"
+                              cy="12"
+                              r="10"
+                              stroke="currentColor"
+                              strokeWidth="4"
+                            ></circle>
+                            <path
+                              className="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                            ></path>
+                          </svg>
+                          
+                        </>
+                      ) : (
+                        <FaTrash size={18} />
+                      )}
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -224,9 +254,6 @@ export default function Home() {
           onSave={loadProducts}
         />
       )}
-
-      {/* Toaster */}
-      {/* <Toaster position="top-right" /> */}
     </div>
   );
 }

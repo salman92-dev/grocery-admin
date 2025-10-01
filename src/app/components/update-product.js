@@ -77,7 +77,7 @@ export default function EditProductModal({ product, isOpen, onClose, onSave }) {
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
             transition={{ type: "spring", stiffness: 200, damping: 20 }}
-            className="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-md relative text-gray-800"
+            className="bg-white p-6 rounded-2xl shadow-2xl w-full mx-4 max-w-md relative text-gray-800"
           >
             <h2 className="text-2xl font-bold mb-6 text-center text-blue-600">
               ✏️ Edit Product

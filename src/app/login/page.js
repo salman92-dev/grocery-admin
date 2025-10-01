@@ -17,6 +17,7 @@ const Login = () => {
     e.preventDefault();
 
     if (username === user && password === userpass) {
+      localStorage.setItem("user", username);
       router.push("/");
     } else {
       setError("❌ Invalid credentials");
