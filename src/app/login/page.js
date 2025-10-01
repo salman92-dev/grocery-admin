@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Login = () => {
   const [username, setuserName] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // ✅ toggle
   const [error, setError] = useState(null);
   const router = useRouter();
 
@@ -51,21 +53,30 @@ const Login = () => {
           </div>
 
           {/* Password */}
-          <div>
+          <div className="relative">
             <label htmlFor="password" className="block text-sm font-medium mb-1">
               Password
             </label>
             <input
-              type="password"
+              type={showPassword ? "text" : "password"} // toggle
               id="password"
               name="password"
               autoComplete="current-password"
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none pr-10"
               required
             />
+            {/* Toggle Icon */}
+            <button
+              type="button"
+              className="absolute right-2 top-9 text-gray-500 hover:text-gray-700"
+              onClick={() => setShowPassword(!showPassword)}
+              tabIndex={-1}
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
           </div>
 
           {/* Error Message */}
