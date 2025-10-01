@@ -1,30 +1,51 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Login = () => {
   const [username, setuserName] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false); // ✅ toggle
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true); // ✅ new loading state
   const router = useRouter();
 
+  useEffect(() => {
+    // Simulate fetching admin/user from localStorage
+    const user = localStorage.getItem("user");
+    if (user) {
+      router.push("/");
+    } else {
+      setLoading(false); // done checking
+    }
+  }, [router]);
+
   // Static credentials
-  const user = "@salman";
+  const userCred = "@salman";
   const userpass = "12345678";
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (username === user && password === userpass) {
+    if (username === userCred && password === userpass) {
       localStorage.setItem("user", username);
       router.push("/");
     } else {
       setError("❌ Invalid credentials");
     }
   };
+
+  // ✅ Show loader while checking admin
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen">
+        <div className="w-12 h-12 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div>
+        <p className="mt-4 text-gray-600 font-medium">Checking authentication...</p>
+      </div>
+    );
+  }
 
   return (
     <section className="min-h-[85vh] flex items-center justify-center text-gray-800">
@@ -58,7 +79,7 @@ const Login = () => {
               Password
             </label>
             <input
-              type={showPassword ? "text" : "password"} // toggle
+              type={showPassword ? "text" : "password"}
               id="password"
               name="password"
               autoComplete="current-password"
@@ -68,7 +89,6 @@ const Login = () => {
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none pr-10"
               required
             />
-            {/* Toggle Icon */}
             <button
               type="button"
               className="absolute right-2 top-9 text-gray-500 hover:text-gray-700"
@@ -81,9 +101,7 @@ const Login = () => {
 
           {/* Error Message */}
           {error && (
-            <p className="text-red-500 text-sm text-center font-medium">
-              {error}
-            </p>
+            <p className="text-red-500 text-sm text-center font-medium">{error}</p>
           )}
 
           {/* Submit */}

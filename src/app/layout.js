@@ -29,7 +29,7 @@ return (
 <html lang="en">
 <body className="bg-gray-50 text-gray-900 antialiased">
 <div className="max-w-7xl mx-auto p-6">
-<h1 className="text-2xl font-bold text-black">Admin Panel – Fresh Organic Products</h1>
+<h1 className="text-2xl font-bold text-black text-center">Admin Panel</h1>
 {/* <p className="text-sm text-gray-800 mt-1">Backed by product.json in your GitHub repo</p> */}
 <div className="mt-6">{children}</div>
   <Toaster position="center-center" reverseOrder={false} />
