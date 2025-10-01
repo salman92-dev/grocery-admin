@@ -88,7 +88,14 @@ export default function AddProductPage() {
       setLoading(false);
     }
   };
-
+if(userLoading){
+  return (
+    <div className="flex flex-col items-center justify-center h-screen">
+        <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+        <p className="mt-4 text-gray-600 font-medium">Checking authentication...</p>
+      </div>
+  );
+}
   return (
     <div>
       <button className="text-white/90 hover:text-white/70 mb-8 py-2 px-6 rounded-md bg-black" onClick={() => window.history.back()}>

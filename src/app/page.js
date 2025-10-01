@@ -14,14 +14,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [deletingId, setDeletingId] = useState(null);
   const [userLoading, setUserLoading] = useState(true);
- const [admin, setAdmin] = useState(false);
 
-  useEffect(() => {
-    const user = localStorage.getItem("user"); // read once
-    if (user) {
-      setAdmin(true);
-    }
-  }, []);
   const Logout = () => {
   if (typeof window !== "undefined") {
     localStorage.removeItem("user");
