@@ -5,7 +5,7 @@ import Image from "next/image";
 import EditProductModal from "./components/update-product";
 import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { FaEdit, FaTrash,FaBox} from "react-icons/fa";
 
 
 export default function Home() {
@@ -114,8 +114,8 @@ export default function Home() {
     <div className="w-full">
 
       <div className="flex flex-col md:flex-row gap-12 items-center justify-between mb-4 bg-gray-800 p-4 rounded-xl">
-        <h1 className="text-2xl md:text-3xl font-bold text-white">
-          📦 Product Management
+        <h1 className="text-2xl md:text-3xl font-bold text-white flex items-center gap-2">
+        <FaBox size={20}/> Product Management
         </h1>
         <div className="flex flex-col md:flex-row gap-4 items-center">
           <a
@@ -208,7 +208,7 @@ export default function Home() {
                   </td>
                   <td className="px-3 md:px-6 py-9 flex items-center gap-6">
                     <button
-                      className="text-sm text-black/70 m-0 rounded hover:text-black/90"
+                      className="text-sm text-black/70 m-0 rounded hover:text-black/90 cursor-pointer"
                       onClick={() => setEditingProduct(p)}
                     >
                       <FaEdit size={18} />
@@ -216,7 +216,7 @@ export default function Home() {
                     <button
                       disabled={deletingId === p.id}
                       onClick={() => handleDelete(p.id)}
-                      className="text-sm text-red-600 rounded disabled:opacity-50 flex items-center justify-center gap-2"
+                      className="text-sm text-red-600 rounded disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
                     >
                       {deletingId === p.id ? (
                         <>
