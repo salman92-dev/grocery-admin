@@ -12,29 +12,27 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const Logout = () => {
-  if (typeof window !== "undefined") {
-    localStorage.removeItem("user");
-    window.location.href = "/login"; // Redirect to login page
-  }
-}
-
 export const metadata = {
-title: 'Admin Panel – GitHub JSON CRUD',
-description: 'Simple admin panel using GitHub as a JSON database',
+  title: "Admin Panel – GitHub JSON CRUD",
+  description: "Simple admin panel using GitHub as a JSON database",
 };
 
 export default function RootLayout({ children }) {
-return (
-<html lang="en">
-<body className="bg-gray-50 text-gray-900 antialiased">
-<div className="max-w-7xl mx-auto p-6">
-<h1 className="text-2xl font-bold text-black text-center">Admin Panel</h1>
-{/* <p className="text-sm text-gray-800 mt-1">Backed by product.json in your GitHub repo</p> */}
-<div className="mt-6">{children}</div>
-  <Toaster position="center-center" reverseOrder={false} />
-</div>
-</body>
-</html>
-);
+  return (
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}> 
+      <body className="bg-gray-50 text-gray-900 antialiased min-h-screen flex flex-col">
+        <header className="border-b bg-white">
+          <div className="text-center p-6 flex items-center justify-center">
+            <h1 className="text-center font-semibold tracking-tight text-black/90 text-3xl">Admin Panel</h1>
+          </div>
+        </header>
+
+        <main className="flex-1 max-w-7xl w-full mx-auto p-6">
+          {children}
+        </main>
+
+        <Toaster position="top-right" />
+      </body>
+    </html>
+  );
 }
