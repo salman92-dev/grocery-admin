@@ -74,7 +74,7 @@ export default function AddProductPage() {
       if (!r.ok) throw new Error(d.error || "Failed to add product");
       
       toast.success('Product added successfully!');
-      setTimeout(() => router.push('/products'), 1500);
+      setTimeout(() => router.push('/'), 1500);
     } catch (err) {
       toast.error(err.message);
     } finally {
