@@ -137,7 +137,7 @@ export default function EditProductModal({ product, isOpen, onClose, onSave }) {
                     value={form.price ?? ""}
                     onChange={handleChange}
                     placeholder="0.00"
-                    step="0.01"
+                    step="1"
                     className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all text-gray-800"
                     required
                   />

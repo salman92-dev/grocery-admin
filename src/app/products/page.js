@@ -1,6 +1,6 @@
 'use client'
 import { useState,useEffect } from "react";
-
+import Image from "next/image";
 export default function ProductPage() {
   const [status, setStatus] = useState(null)
   const [data, setData] =useState([])
@@ -55,7 +55,7 @@ if(status=== 200){
           <li key={i} className="p-2 border rounded">
             {p.name} – ${p.price} - {p.category}
             <br />
-            <img src={p.image} alt={p.name} className="h-16 mt-1" />
+            <Image src={p.image} alt={p.name} className="h-16 mt-1" width={100} height={100} />
           </li>
         ))}
       </ul>

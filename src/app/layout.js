@@ -27,7 +27,7 @@ export default function RootLayout({ children }) {
           </div>
         </header>
 
-        <main className="flex-1 max-w-7xl w-full mx-auto p-6">
+        <main className="flex-1 w-full mx-auto">
           {children}
         </main>
 
